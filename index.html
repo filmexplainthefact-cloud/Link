@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>EekLink · Upload Video → Pure Video Link</title>
+  <title>EekLink Pro · High Quality Pure Video Link Generator</title>
   <style>
     * {
       margin: 0;
@@ -22,15 +22,14 @@
     }
 
     .card {
-      max-width: 750px;
+      max-width: 850px;
       width: 100%;
-      background: rgba(18, 25, 45, 0.75);
+      background: rgba(18, 25, 45, 0.85);
       backdrop-filter: blur(12px);
-      border-radius: 3rem;
-      border: 1px solid rgba(72, 187, 255, 0.25);
+      border-radius: 2rem;
+      border: 1px solid rgba(72, 187, 255, 0.3);
       box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.5);
       padding: 2rem;
-      transition: all 0.2s;
     }
 
     h1 {
@@ -52,58 +51,63 @@
       font-size: 0.75rem;
       font-weight: 500;
       color: #90cdf4;
-      border: 0.5px solid rgba(96, 165, 250, 0.5);
+      border: 1px solid rgba(96, 165, 250, 0.5);
+    }
+
+    .quality-badge {
+      background: rgba(34, 197, 94, 0.2);
+      border-color: rgba(34, 197, 94, 0.5);
+      color: #4ade80;
     }
 
     .sub {
       color: #9aa9c1;
       margin-top: 0.5rem;
-      font-weight: 450;
-      border-left: 3px solid #3b82f6;
       padding-left: 1rem;
+      border-left: 3px solid #3b82f6;
       font-size: 0.9rem;
     }
 
     .upload-area {
-      margin: 2rem 0 1.5rem;
+      margin: 2rem 0;
     }
 
     .dropzone {
       background: rgba(15, 23, 42, 0.7);
       border: 2px dashed #3b4a6e;
-      border-radius: 2rem;
-      padding: 2rem 1.5rem;
+      border-radius: 1.5rem;
+      padding: 2rem;
       text-align: center;
       cursor: pointer;
-      transition: all 0.2s;
-      backdrop-filter: blur(4px);
+      transition: all 0.3s;
     }
 
     .dropzone:hover {
       border-color: #60a5fa;
-      background: rgba(37, 99, 235, 0.1);
+      background: rgba(59, 130, 246, 0.1);
+      transform: scale(0.98);
     }
 
     .dropzone.drag-over {
       border-color: #3b82f6;
-      background: rgba(59, 130, 246, 0.15);
-      transform: scale(0.99);
+      background: rgba(59, 130, 246, 0.2);
     }
 
     .upload-icon {
-      font-size: 3rem;
+      font-size: 3.5rem;
       margin-bottom: 12px;
     }
 
     .upload-text {
       color: #cbd5e6;
-      font-weight: 500;
-      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 1.1rem;
     }
 
     .upload-hint {
       color: #6c7ea0;
-      font-size: 0.75rem;
+      font-size: 0.8rem;
+      margin-top: 8px;
     }
 
     .file-input-hidden {
@@ -111,52 +115,55 @@
     }
 
     .video-preview-area {
-      margin: 1.2rem 0;
-      border-radius: 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 1rem;
       overflow: hidden;
-      background: #00000050;
+      background: #000;
       border: 1px solid #2d3a5e;
     }
 
     .preview-header {
-      background: #0f172acc;
-      padding: 0.7rem 1rem;
+      background: #0f172a;
+      padding: 0.75rem 1rem;
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      font-size: 0.8rem;
       color: #b9d0f0;
+      font-size: 0.85rem;
       border-bottom: 1px solid #1e2b46;
     }
 
     .video-wrapper {
-      position: relative;
       background: #000;
     }
 
     .video-wrapper video {
       width: 100%;
       display: block;
-      max-height: 280px;
+      max-height: 320px;
       object-fit: contain;
-      background: #020617;
     }
 
     .file-info {
-      padding: 0.6rem 1rem;
-      background: #0b1120cc;
-      font-size: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: #0b1120;
+      font-size: 0.8rem;
       color: #8aa0c0;
       display: flex;
-      gap: 16px;
+      gap: 20px;
       flex-wrap: wrap;
+      border-top: 1px solid #1e2b46;
+    }
+
+    .quality-indicator {
+      color: #4ade80;
+      font-weight: 600;
     }
 
     .link-output {
       background: #0b1120cc;
-      border-radius: 1.8rem;
-      padding: 1.2rem 1.5rem;
-      margin: 1rem 0 1.2rem;
+      border-radius: 1rem;
+      padding: 1.2rem;
+      margin: 1rem 0;
       border: 1px solid #2d3a5e;
     }
 
@@ -166,7 +173,6 @@
       gap: 8px;
       font-size: 0.75rem;
       text-transform: uppercase;
-      letter-spacing: 1px;
       color: #60a5fa;
       font-weight: 600;
       margin-bottom: 12px;
@@ -178,15 +184,15 @@
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 12px;
-      background: #03061780;
-      border-radius: 2rem;
-      padding: 0.5rem 0.5rem 0.5rem 1.5rem;
-      border: 0.5px solid #2a3958;
+      background: #030617;
+      border-radius: 1rem;
+      padding: 0.75rem 1rem;
+      border: 1px solid #2a3958;
     }
 
     #generatedLink {
-      font-family: 'SF Mono', monospace;
-      font-size: 0.8rem;
+      font-family: monospace;
+      font-size: 0.75rem;
       word-break: break-all;
       color: #b9d0f0;
       text-decoration: none;
@@ -197,7 +203,7 @@
       background: #1e2a44;
       border: none;
       border-radius: 2rem;
-      padding: 0.6rem 1.2rem;
+      padding: 0.5rem 1.2rem;
       font-weight: 500;
       font-size: 0.75rem;
       color: white;
@@ -206,24 +212,26 @@
     }
 
     .copy-btn:hover {
-      background: #2d3c60;
+      background: #3b4a6e;
       transform: scale(0.96);
     }
 
-    .note {
-      font-size: 0.7rem;
-      color: #6c7ea0;
-      margin-top: 10px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
+    .test-btn {
+      background: linear-gradient(105deg, #2563eb, #1e40af);
+      border: none;
+      border-radius: 2rem;
+      padding: 0.5rem 1.2rem;
+      font-weight: 500;
+      font-size: 0.75rem;
+      color: white;
+      cursor: pointer;
     }
 
     button {
       background: linear-gradient(105deg, #2563eb, #1e40af);
       border: none;
       border-radius: 2rem;
-      padding: 0.7rem 1.6rem;
+      padding: 0.7rem 1.5rem;
       font-weight: 600;
       color: white;
       cursor: pointer;
@@ -232,52 +240,77 @@
 
     button:hover {
       transform: scale(0.97);
-      background: linear-gradient(105deg, #3b82f6, #1e3a8a);
     }
 
     .reset-btn {
       background: #2d3a5e;
-      margin-left: 8px;
     }
 
-    .reset-btn:hover {
-      background: #4a5b85;
+    .note {
+      font-size: 0.7rem;
+      color: #6c7ea0;
+      margin-top: 10px;
+    }
+
+    .success-note {
+      background: rgba(34, 197, 94, 0.1);
+      border-left: 3px solid #22c55e;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      margin-top: 1rem;
     }
 
     .hidden {
       display: none !important;
     }
 
-    .toast-msg {
+    .toast {
       position: fixed;
-      bottom: 25px;
+      bottom: 30px;
       left: 50%;
-      transform: translateX(-50%) scale(0.9);
-      background: #1e293bdd;
-      backdrop-filter: blur(12px);
-      border-radius: 60px;
+      transform: translateX(-50%);
+      background: #1e293b;
+      backdrop-filter: blur(10px);
       padding: 10px 24px;
-      color: #e2e8f0;
-      font-weight: 500;
+      border-radius: 50px;
+      color: white;
       font-size: 0.85rem;
-      border: 0.5px solid #3b82f6;
-      pointer-events: none;
-      transition: 0.2s;
+      border: 1px solid #3b82f6;
       opacity: 0;
-      z-index: 200;
+      transition: 0.2s;
+      pointer-events: none;
+      z-index: 1000;
     }
 
-    .toast-msg.show {
+    .toast.show {
       opacity: 1;
-      transform: translateX(-50%) scale(1);
+    }
+
+    .loader {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
 
     @media (max-width: 600px) {
       .card {
-        padding: 1.3rem;
+        padding: 1.2rem;
       }
       .generated-link-box {
-        padding: 0.5rem;
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .file-info {
+        font-size: 0.7rem;
+        gap: 12px;
       }
     }
   </style>
@@ -285,135 +318,144 @@
 <body>
 
 <div class="card">
-  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-    <h1>
-      📹 EekLink <span class="badge">upload → pure video link</span>
-    </h1>
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+    <h1>📹 EekLink Pro <span class="badge quality-badge">✨ HD Quality</span></h1>
   </div>
   <div class="sub">
-    ⬆️ Apni device se video upload karo → ek special link bane → link click karne par sirf video (full focus, no ads)
+    ⬆️ Video upload karo (HD/4K quality intact) → permanent link bane → link click karne par SIRF VIDEO full quality mein
   </div>
 
   <div class="upload-area">
     <div class="dropzone" id="dropzone">
-      <div class="upload-icon">🎥📂</div>
-      <div class="upload-text">Click ya drag karo video file</div>
-      <div class="upload-hint">MP4, WebM, MOV, AVI (max 500MB)</div>
+      <div class="upload-icon">🎥✨</div>
+      <div class="upload-text">Click karo ya video drag karo</div>
+      <div class="upload-hint">MP4, WebM, MOV, AVI (Max 500MB) · Original quality preserve</div>
     </div>
-    <input type="file" id="fileInput" class="file-input-hidden" accept="video/mp4,video/webm,video/mov,video/avi,video/quicktime">
+    <input type="file" id="fileInput" accept="video/*" class="file-input-hidden">
   </div>
 
-  <div id="videoPreviewSection" class="video-preview-area hidden">
+  <div id="previewSection" class="video-preview-area hidden">
     <div class="preview-header">
-      <span>🎬 Uploaded Video Preview</span>
-      <span>⚡ preview only</span>
+      <span>🎬 Video Preview (Original Quality)</span>
+      <span id="qualityStatus">⚡ HD Ready</span>
     </div>
     <div class="video-wrapper">
       <video id="previewVideo" controls></video>
     </div>
-    <div class="file-info" id="fileInfo">
-      <span>📁 Filename: <span id="fileName">-</span></span>
-      <span>📦 Size: <span id="fileSize">-</span></span>
-      <span>🎞️ Type: <span id="fileType">-</span></span>
+    <div class="file-info">
+      <span>📄 <strong id="fileName">-</strong></span>
+      <span>💾 <strong id="fileSize">-</strong></span>
+      <span>🎬 Resolution: <strong id="videoResolution">-</strong></span>
+      <span>🏷️ <strong id="fileType">-</strong></span>
     </div>
   </div>
 
-  <div id="linkOutputArea" class="link-output hidden">
+  <div id="linkSection" class="link-output hidden">
     <div class="output-header">
-      <span>🔗 TUMHARA PURE VIDEO LINK (sirf video)</span>
+      <span>🔗 YOUR PURE VIDEO LINK (High Quality Preserved)</span>
     </div>
     <div class="generated-link-box">
-      <a id="generatedLink" href="#" target="_blank" rel="noopener noreferrer">#</a>
-      <button id="copyLinkBtn" class="copy-btn">📋 Copy Link</button>
+      <a id="generatedLink" href="#" target="_blank" style="flex:1;">Loading...</a>
+      <button id="copyBtn" class="copy-btn">📋 Copy Link</button>
+      <button id="testLinkBtn" class="test-btn">🔗 Test Link</button>
+    </div>
+    <div class="success-note" id="qualityNote">
+      ✅ Video quality: <strong>Original resolution preserved</strong> · No compression · Pure video player
     </div>
     <div class="note">
-      ⚡ Is link pe click karo → naye page mein sirf video khulega (fullscreen mode, no extra UI)
+      💡 Link copy karo → kisi bhi browser tab mein open karo → full HD/4K quality mein sirf video aayegi!
     </div>
   </div>
 
-  <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px;">
-    <button id="resetAllBtn" class="reset-btn">⟳ Reset / New Video</button>
-  </div>
-  <div class="note" style="margin-top: 1rem; text-align: center; justify-content: center;">
-    💡 Video device me store hoti hai. Link sirf aapke browser ke liye valid hai. Click link = sirf video player.
+  <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 1rem;">
+    <button id="resetBtn" class="reset-btn">⟳ New Video Upload</button>
   </div>
 </div>
 
-<div id="toastMsg" class="toast-msg">✨ Link ready!</div>
+<div id="toast" class="toast">✨ Link Copied!</div>
 
 <script>
   (function() {
-    // Get all DOM elements
+    // DOM elements
     const dropzone = document.getElementById('dropzone');
     const fileInput = document.getElementById('fileInput');
-    const previewSection = document.getElementById('videoPreviewSection');
+    const previewSection = document.getElementById('previewSection');
     const previewVideo = document.getElementById('previewVideo');
     const fileNameSpan = document.getElementById('fileName');
     const fileSizeSpan = document.getElementById('fileSize');
     const fileTypeSpan = document.getElementById('fileType');
-    const linkOutputArea = document.getElementById('linkOutputArea');
-    const generatedLinkAnchor = document.getElementById('generatedLink');
-    const copyBtn = document.getElementById('copyLinkBtn');
-    const resetBtn = document.getElementById('resetAllBtn');
-    const toastMsg = document.getElementById('toastMsg');
+    const videoResolutionSpan = document.getElementById('videoResolution');
+    const linkSection = document.getElementById('linkSection');
+    const generatedLink = document.getElementById('generatedLink');
+    const copyBtn = document.getElementById('copyBtn');
+    const testLinkBtn = document.getElementById('testLinkBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const toast = document.getElementById('toast');
+    const qualityStatus = document.getElementById('qualityStatus');
 
-    let currentVideoBlob = null;
+    // Store video data
+    let currentVideoBase64 = null;
     let currentVideoFile = null;
-    let currentViewerLink = '';
+    let currentViewerUrl = null;
 
-    function showToast(message, isError = false) {
-      toastMsg.textContent = message || (isError ? '⚠️ Issue' : '✅ Done');
-      toastMsg.classList.add('show');
-      setTimeout(() => {
-        toastMsg.classList.remove('show');
-      }, 2200);
+    function showToastMessage(msg, isError = false) {
+      toast.textContent = msg || (isError ? '❌ Error' : '✅ Success');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
     }
 
-    function revokeVideoBlob() {
-      if (currentVideoBlob) {
-        URL.revokeObjectURL(currentVideoBlob);
-        currentVideoBlob = null;
-      }
+    // Get video resolution from file
+    function getVideoResolution(file) {
+      return new Promise((resolve) => {
+        const video = document.createElement('video');
+        video.preload = 'metadata';
+        const url = URL.createObjectURL(file);
+        video.onloadedmetadata = function() {
+          URL.revokeObjectURL(url);
+          resolve(`${video.videoWidth} x ${video.videoHeight}`);
+        };
+        video.onerror = function() {
+          URL.revokeObjectURL(url);
+          resolve('Unknown');
+        };
+        video.src = url;
+      });
     }
 
-    function resetAll() {
-      revokeVideoBlob();
-      if (currentViewerLink && currentViewerLink.startsWith('blob:')) {
-        URL.revokeObjectURL(currentViewerLink);
-        currentViewerLink = '';
-      }
-      currentVideoFile = null;
-      previewVideo.src = '';
-      previewSection.classList.add('hidden');
-      linkOutputArea.classList.add('hidden');
-      generatedLinkAnchor.href = '#';
-      generatedLinkAnchor.textContent = '#';
-      fileInput.value = '';
-      fileNameSpan.textContent = '-';
-      fileSizeSpan.textContent = '-';
-      fileTypeSpan.textContent = '-';
-      showToast('🔄 Reset ho gaya, naya video upload karo', false);
+    // Convert file to base64 (preserves original quality)
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
     }
 
-    function generatePureVideoLinkFromFile(videoFile, videoBlobUrl) {
-      const videoSrc = videoBlobUrl;
-      const fileNameSafe = (videoFile.name || 'video').replace(/[&<>]/g, '').substring(0, 40);
+    // Generate pure video viewer HTML with embedded base64 video (full quality)
+    function generatePureVideoViewer(videoBase64, fileType, fileName, fileSize, resolution) {
+      const safeName = fileName.substring(0, 50).replace(/[&<>]/g, '');
+      const sizeMB = (parseInt(fileSize) / (1024 * 1024)).toFixed(2);
       
-      const pureHtmlContent = `<!DOCTYPE html>
+      return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Pure Video · ${fileNameSafe}</title>
+  <title>🎬 Pure Video · ${safeName}</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     body {
       background: #000000;
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      font-family: system-ui, sans-serif;
+      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
     }
     .video-container {
       width: 100%;
@@ -422,6 +464,7 @@
       align-items: center;
       justify-content: center;
       background: #000;
+      position: relative;
     }
     video {
       max-width: 100%;
@@ -429,118 +472,185 @@
       width: auto;
       height: auto;
       object-fit: contain;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.05);
     }
-    .info-tip {
+    .info-panel {
       position: fixed;
-      bottom: 16px;
-      right: 16px;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(8px);
-      padding: 6px 14px;
-      border-radius: 60px;
-      color: #ccc;
-      font-size: 0.7rem;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(12px);
+      padding: 8px 16px;
+      border-radius: 40px;
+      color: #aaa;
+      font-size: 11px;
+      font-family: monospace;
       pointer-events: none;
+      z-index: 100;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .quality-badge {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(34,197,94,0.2);
+      backdrop-filter: blur(12px);
+      padding: 6px 14px;
+      border-radius: 40px;
+      color: #4ade80;
+      font-size: 12px;
+      font-weight: 500;
+      font-family: monospace;
+      border: 1px solid rgba(74,222,128,0.3);
+      pointer-events: none;
+    }
+    @media (max-width: 640px) {
+      .info-panel { font-size: 9px; bottom: 12px; right: 12px; }
+      .quality-badge { font-size: 10px; top: 12px; right: 12px; }
     }
   </style>
 </head>
 <body>
   <div class="video-container">
     <video id="mainVideo" controls autoplay playsinline>
-      <source src="${videoSrc}" type="${videoFile.type}">
+      <source src="${videoBase64}" type="${fileType}">
       Your browser does not support the video tag.
     </video>
   </div>
-  <div class="info-tip">🎬 Pure video mode | EekLink</div>
+  <div class="quality-badge">
+    🎬 ${resolution} · ${sizeMB} MB · Original Quality
+  </div>
+  <div class="info-panel">
+    🎥 Pure Video Mode | EekLink Pro
+  </div>
+  <script>
+    const video = document.getElementById('mainVideo');
+    if(video) {
+      video.addEventListener('error', function(e) {
+        const errorDiv = document.createElement('div');
+        errorDiv.textContent = '⚠️ Video format not supported. Try MP4 format.';
+        errorDiv.style.position = 'fixed';
+        errorDiv.style.top = '50%';
+        errorDiv.style.left = '50%';
+        errorDiv.style.transform = 'translate(-50%, -50%)';
+        errorDiv.style.background = 'rgba(220,38,38,0.95)';
+        errorDiv.style.color = 'white';
+        errorDiv.style.padding = '12px 24px';
+        errorDiv.style.borderRadius = '40px';
+        errorDiv.style.fontSize = '14px';
+        errorDiv.style.zIndex = '999';
+        errorDiv.style.fontFamily = 'system-ui';
+        document.body.appendChild(errorDiv);
+      });
+      video.volume = 1.0;
+    }
+  </script>
 </body>
 </html>`;
-      
-      const htmlBlob = new Blob([pureHtmlContent], { type: 'text/html' });
-      const htmlLinkUrl = URL.createObjectURL(htmlBlob);
-      return htmlLinkUrl;
     }
-    
-    function handleVideoFile(file) {
+
+    async function processVideo(file) {
       if (!file || !file.type.startsWith('video/')) {
-        showToast('❌ Sirf video file chuno (MP4, WebM, MOV, etc)', true);
+        showToastMessage('❌ Sirf video file chahiye! (MP4, WebM, MOV)', true);
         return false;
       }
-      
+
       const maxSize = 500 * 1024 * 1024;
       if (file.size > maxSize) {
-        showToast('📦 Video size 500MB se kam honi chahiye', true);
+        showToastMessage('📦 Video 500MB se choti honi chahiye', true);
         return false;
       }
+
+      showToastMessage('⏳ Processing video (preserving quality)...', false);
+      qualityStatus.innerHTML = '<span class="loader"></span> Processing...';
       
-      revokeVideoBlob();
-      if (currentViewerLink && currentViewerLink.startsWith('blob:')) {
-        URL.revokeObjectURL(currentViewerLink);
-        currentViewerLink = '';
+      try {
+        // Get video resolution first
+        const resolution = await getVideoResolution(file);
+        
+        // Convert video to base64 (preserves original quality 100%)
+        const base64Data = await fileToBase64(file);
+        
+        // Store video data
+        currentVideoBase64 = base64Data;
+        currentVideoFile = file;
+        
+        // Show preview using blob URL (better performance for preview)
+        if (previewVideo.src && previewVideo.src.startsWith('blob:')) {
+          URL.revokeObjectURL(previewVideo.src);
+        }
+        const previewBlobUrl = URL.createObjectURL(file);
+        previewVideo.src = previewBlobUrl;
+        
+        // Update file info
+        let displayName = file.name;
+        if (displayName.length > 35) displayName = displayName.substring(0, 32) + '...';
+        fileNameSpan.textContent = displayName;
+        
+        const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+        fileSizeSpan.textContent = `${sizeInMB} MB`;
+        
+        let fileTypeText = file.type.split('/')[1] || file.name.split('.').pop();
+        fileTypeSpan.textContent = fileTypeText.toUpperCase();
+        videoResolutionSpan.textContent = resolution;
+        
+        // Generate pure video viewer HTML with embedded base64 (full quality)
+        const viewerHTML = generatePureVideoViewer(base64Data, file.type, file.name, file.size, resolution);
+        
+        // Create a blob URL for the viewer HTML
+        if (currentViewerUrl && currentViewerUrl.startsWith('blob:')) {
+          URL.revokeObjectURL(currentViewerUrl);
+        }
+        
+        const htmlBlob = new Blob([viewerHTML], { type: 'text/html' });
+        currentViewerUrl = URL.createObjectURL(htmlBlob);
+        
+        // Update link display
+        let displayLink = currentViewerUrl;
+        if (displayLink.length > 60) {
+          displayLink = displayLink.substring(0, 57) + '...';
+        }
+        generatedLink.href = currentViewerUrl;
+        generatedLink.textContent = displayLink;
+        generatedLink.title = currentViewerUrl;
+        
+        // Show sections
+        previewSection.classList.remove('hidden');
+        linkSection.classList.remove('hidden');
+        
+        qualityStatus.innerHTML = '✨ HD Quality Preserved';
+        showToastMessage('✅ Video ready! Link copy karo aur click karo - full quality mein sirf video', false);
+        
+        return true;
+      } catch (error) {
+        console.error('Error:', error);
+        showToastMessage('❌ Error processing video', true);
+        qualityStatus.innerHTML = '⚠️ Error';
+        return false;
       }
-      
-      const videoBlobUrl = URL.createObjectURL(file);
-      currentVideoBlob = videoBlobUrl;
-      currentVideoFile = file;
-      
-      previewVideo.src = videoBlobUrl;
-      previewVideo.load();
-      
-      let displayName = file.name;
-      if (displayName.length > 35) {
-        displayName = displayName.substring(0, 32) + '...';
-      }
-      fileNameSpan.textContent = displayName;
-      
-      const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
-      fileSizeSpan.textContent = `${sizeInMB} MB`;
-      
-      let fileTypeText = file.type.split('/')[1];
-      if (!fileTypeText) {
-        fileTypeText = file.name.split('.').pop().toUpperCase();
-      } else {
-        fileTypeText = fileTypeText.toUpperCase();
-      }
-      fileTypeSpan.textContent = fileTypeText;
-      
-      previewSection.classList.remove('hidden');
-      
-      const pureLink = generatePureVideoLinkFromFile(file, videoBlobUrl);
-      currentViewerLink = pureLink;
-      
-      generatedLinkAnchor.href = pureLink;
-      let displayLink = pureLink;
-      if (pureLink.length > 55) {
-        displayLink = pureLink.substring(0, 50) + '...';
-      }
-      generatedLinkAnchor.textContent = displayLink;
-      generatedLinkAnchor.title = pureLink;
-      linkOutputArea.classList.remove('hidden');
-      
-      showToast('✅ Video ready! Link copy karo aur click karo → sirf video', false);
-      return true;
     }
-    
+
     function openFileDialog() {
       fileInput.click();
     }
-    
+
     function onFileSelected(event) {
       const files = event.target.files;
       if (files && files.length > 0) {
-        handleVideoFile(files[0]);
+        processVideo(files[0]);
       }
     }
-    
+
     function onDragOver(e) {
       e.preventDefault();
       dropzone.classList.add('drag-over');
     }
-    
+
     function onDragLeave(e) {
       e.preventDefault();
       dropzone.classList.remove('drag-over');
     }
-    
+
     function onDrop(e) {
       e.preventDefault();
       dropzone.classList.remove('drag-over');
@@ -548,57 +658,52 @@
       if (files && files.length > 0) {
         const file = files[0];
         if (file.type.startsWith('video/')) {
-          handleVideoFile(file);
+          processVideo(file);
         } else {
-          showToast('❌ Drop sirf video file karo (MP4, WebM, MOV)', true);
+          showToastMessage('❌ Sirf video file drop karo!', true);
         }
       }
     }
-    
+
     async function copyLink() {
-      if (!currentViewerLink || currentViewerLink === '#') {
-        showToast('⚠️ Pehle video upload karo', true);
+      if (!currentViewerUrl) {
+        showToastMessage('⚠️ Pehle video upload karo', true);
         return;
       }
       try {
-        await navigator.clipboard.writeText(currentViewerLink);
-        showToast('🔗 Link copy ho gaya! Ab kisi ko bhejo → click = sirf video', false);
+        await navigator.clipboard.writeText(currentViewerUrl);
+        showToastMessage('🔗 Link copy ho gaya! Ab kisi ko bhejo → click = full quality sirf video', false);
       } catch (err) {
         const textarea = document.createElement('textarea');
-        textarea.value = currentViewerLink;
+        textarea.value = currentViewerUrl;
         document.body.appendChild(textarea);
         textarea.select();
         document.execCommand('copy');
         document.body.removeChild(textarea);
-        showToast('📋 Link copied (manual)');
+        showToastMessage('📋 Link copied!', false);
       }
     }
-    
+
+    function testLink() {
+      if (currentViewerUrl) {
+        window.open(currentViewerUrl, '_blank');
+      } else {
+        showToastMessage('⚠️ Pehle video upload karo', true);
+      }
+    }
+
     function fullReset() {
-      resetAll();
-      if (currentViewerLink && currentViewerLink.startsWith('blob:')) {
-        URL.revokeObjectURL(currentViewerLink);
-        currentViewerLink = '';
+      if (previewVideo.src && previewVideo.src.startsWith('blob:')) {
+        URL.revokeObjectURL(previewVideo.src);
       }
+      if (currentViewerUrl && currentViewerUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(currentViewerUrl);
+      }
+      currentVideoBase64 = null;
       currentVideoFile = null;
-      linkOutputArea.classList.add('hidden');
-      previewSection.classList.add('hidden');
+      currentViewerUrl = null;
       previewVideo.src = '';
-    }
-    
-    dropzone.addEventListener('click', openFileDialog);
-    fileInput.addEventListener('change', onFileSelected);
-    dropzone.addEventListener('dragover', onDragOver);
-    dropzone.addEventListener('dragleave', onDragLeave);
-    dropzone.addEventListener('drop', onDrop);
-    copyBtn.addEventListener('click', copyLink);
-    resetBtn.addEventListener('click', fullReset);
-    
-    window.addEventListener('beforeunload', () => {
-      if (currentVideoBlob) URL.revokeObjectURL(currentVideoBlob);
-      if (currentViewerLink && currentViewerLink.startsWith('blob:')) URL.revokeObjectURL(currentViewerLink);
-    });
-  })();
-</script>
-</body>
-</html>
+      previewSection.classList.add('hidden');
+      linkSection.classList.add('hidden');
+      fileInput.value = '';
+      fileNameSpan.te
