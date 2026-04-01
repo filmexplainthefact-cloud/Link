@@ -1,594 +1,1012 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EekLink - Pure Video Link Generator</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Synex Tournament - FF MAX Arena</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      background: linear-gradient(135deg, #0a0f1e 0%, #0c1222 100%);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      padding: 20px;
-    }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f0c1f 0%, #1a1730 100%);
+            color: #ffffff;
+            padding-bottom: 85px;
+            min-height: 100vh;
+        }
 
-    .container {
-      max-width: 800px;
-      width: 100%;
-      background: rgba(18, 25, 45, 0.9);
-      border-radius: 24px;
-      padding: 30px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-      border: 1px solid rgba(72, 187, 255, 0.3);
-    }
+        /* Custom Scroll */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #2a2740;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ff4757;
+            border-radius: 10px;
+        }
 
-    h1 {
-      font-size: 28px;
-      background: linear-gradient(135deg, #60a5fa, #a78bfa);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      margin-bottom: 10px;
-    }
+        /* Side Menu */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 998;
+            display: none;
+            backdrop-filter: blur(5px);
+        }
 
-    .sub {
-      color: #94a3b8;
-      margin-bottom: 30px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid #1e293b;
-    }
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100%;
+            background: linear-gradient(180deg, #15122c 0%, #0e0c22 100%);
+            z-index: 999;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 5px 0 30px rgba(0, 0, 0, 0.5);
+            border-right: 1px solid rgba(255, 71, 87, 0.2);
+        }
 
-    .dropzone {
-      background: rgba(15, 23, 42, 0.6);
-      border: 2px dashed #3b4a6e;
-      border-radius: 20px;
-      padding: 50px 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s;
-      margin-bottom: 20px;
-    }
+        .side-menu.open {
+            left: 0;
+        }
 
-    .dropzone:hover {
-      border-color: #60a5fa;
-      background: rgba(96, 165, 250, 0.1);
-    }
+        .menu-header {
+            background: linear-gradient(135deg, #ff4757, #e8414f);
+            padding: 35px 20px;
+            text-align: center;
+        }
 
-    .dropzone.drag-over {
-      border-color: #3b82f6;
-      background: rgba(59, 130, 246, 0.2);
-    }
+        .menu-avatar {
+            width: 85px;
+            height: 85px;
+            background: linear-gradient(135deg, #fff, #f0f0f0);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
 
-    .upload-icon {
-      font-size: 48px;
-      margin-bottom: 15px;
-    }
+        .menu-avatar i {
+            font-size: 48px;
+            color: #ff4757;
+        }
 
-    .upload-text {
-      color: #cbd5e1;
-      font-size: 18px;
-      font-weight: 500;
-      margin-bottom: 8px;
-    }
+        .menu-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
 
-    .upload-hint {
-      color: #64748b;
-      font-size: 12px;
-    }
+        .menu-email {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
 
-    #fileInput {
-      display: none;
-    }
+        .menu-items {
+            padding: 20px 0;
+        }
 
-    .preview-box {
-      background: #000;
-      border-radius: 16px;
-      overflow: hidden;
-      margin: 20px 0;
-      display: none;
-    }
+        .menu-item {
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #e0e0e0;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
 
-    .preview-box.show {
-      display: block;
-    }
+        .menu-item:hover {
+            background: rgba(255, 71, 87, 0.15);
+            border-left-color: #ff4757;
+            color: #fff;
+        }
 
-    .preview-header {
-      background: #0f172a;
-      padding: 12px 16px;
-      color: #94a3b8;
-      font-size: 14px;
-      border-bottom: 1px solid #1e293b;
-    }
+        .menu-item i {
+            width: 24px;
+            font-size: 1.2rem;
+            color: #ff4757;
+        }
 
-    video {
-      width: 100%;
-      max-height: 300px;
-      display: block;
-    }
+        .admin-badge {
+            background: #ff9800;
+            color: white;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-left: 8px;
+        }
 
-    .info {
-      background: #0f172a;
-      padding: 12px 16px;
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      font-size: 12px;
-      color: #94a3b8;
-    }
+        .menu-logout {
+            margin-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #ff6b6b;
+        }
 
-    .link-box {
-      background: #0f172a;
-      border-radius: 16px;
-      padding: 20px;
-      margin: 20px 0;
-      display: none;
-    }
+        /* Header */
+        .header {
+            padding: 18px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 12, 31, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 71, 87, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-    .link-box.show {
-      display: block;
-    }
+        .menu-btn {
+            background: none;
+            border: none;
+            font-size: 1.6rem;
+            color: #ff4757;
+            cursor: pointer;
+            padding: 8px;
+        }
 
-    .link-header {
-      color: #60a5fa;
-      font-size: 12px;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff4757, #ff9f4d);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+        }
 
-    .link-content {
-      background: #030617;
-      border-radius: 12px;
-      padding: 12px 16px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-      word-break: break-all;
-    }
+        .logo span {
+            font-size: 0.6rem;
+            color: #8b8aa5;
+            display: block;
+            text-align: center;
+        }
 
-    .link-content a {
-      flex: 1;
-      color: #94a3b8;
-      text-decoration: none;
-      font-family: monospace;
-      font-size: 12px;
-    }
+        .profile-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 71, 87, 0.15);
+            padding: 6px 14px;
+            border-radius: 40px;
+            cursor: pointer;
+            border: 1px solid rgba(255, 71, 87, 0.3);
+        }
 
-    button {
-      background: #1e293b;
-      border: none;
-      padding: 8px 20px;
-      border-radius: 40px;
-      color: white;
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 500;
-      transition: all 0.2s;
-    }
+        .profile-avatar {
+            width: 34px;
+            height: 34px;
+            background: linear-gradient(135deg, #ff4757, #e8414f);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    button:hover {
-      background: #334155;
-      transform: scale(0.96);
-    }
+        .profile-name {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #ff9f4d;
+        }
 
-    .btn-primary {
-      background: linear-gradient(135deg, #3b82f6, #1e40af);
-    }
+        /* Wallet Card */
+        .wallet-card {
+            background: linear-gradient(135deg, #1e1b3a, #16132e);
+            margin: 15px 16px;
+            padding: 12px 20px;
+            border-radius: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 71, 87, 0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
 
-    .btn-primary:hover {
-      background: linear-gradient(135deg, #2563eb, #1e3a8a);
-    }
+        .wallet-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-    .reset-btn {
-      background: #334155;
-    }
+        .wallet-icon {
+            color: #ffd966;
+            font-size: 1.3rem;
+        }
 
-    .success-msg {
-      background: rgba(34, 197, 94, 0.1);
-      border-left: 3px solid #22c55e;
-      padding: 12px;
-      border-radius: 8px;
-      margin-top: 15px;
-      font-size: 12px;
-      color: #86efac;
-    }
+        .wallet-balance {
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: #ffd966;
+        }
 
-    .toast {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #1e293b;
-      padding: 10px 24px;
-      border-radius: 40px;
-      color: white;
-      font-size: 14px;
-      border: 1px solid #3b82f6;
-      opacity: 0;
-      transition: 0.2s;
-      pointer-events: none;
-      z-index: 1000;
-    }
+        .add-money {
+            background: linear-gradient(135deg, #ff4757, #e8414f);
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
 
-    .toast.show {
-      opacity: 1;
-    }
+        .add-money:hover {
+            transform: scale(0.98);
+        }
 
-    .spinner {
-      display: inline-block;
-      width: 14px;
-      height: 14px;
-      border: 2px solid #fff;
-      border-radius: 50%;
-      border-top-color: transparent;
-      animation: spin 0.6s linear infinite;
-    }
+        .container {
+            padding: 18px 16px;
+        }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+        /* Hero Banner */
+        .hero-banner {
+            background: linear-gradient(135deg, #ff4757, #ff9f4d);
+            border-radius: 28px;
+            padding: 28px 22px;
+            margin-bottom: 28px;
+            position: relative;
+            overflow: hidden;
+        }
 
-    @media (max-width: 600px) {
-      .container {
-        padding: 20px;
-      }
-      .link-content {
-        flex-direction: column;
-        align-items: stretch;
-      }
-    }
-  </style>
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .hero-banner h2 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .prize-badge {
+            background: rgba(0,0,0,0.3);
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-top: 12px;
+        }
+
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0 16px;
+        }
+
+        .section-title h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .refresh-link {
+            color: #ff9f4d;
+            font-size: 0.75rem;
+            text-decoration: none;
+        }
+
+        /* Tournament Cards - 16:9 Thumbnail */
+        .tournament-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .tournament-card {
+            background: linear-gradient(135deg, #1e1b3a, #16132e);
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 71, 87, 0.2);
+            transition: transform 0.2s;
+        }
+
+        .tournament-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .tournament-thumb-container {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .tournament-thumb {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .tournament-card:hover .tournament-thumb {
+            transform: scale(1.05);
+        }
+
+        .tournament-content {
+            padding: 16px;
+        }
+
+        .tournament-info h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .tournament-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.7rem;
+            color: #b8b7d0;
+            flex-wrap: wrap;
+        }
+
+        .tournament-meta i {
+            margin-right: 4px;
+            color: #ff9f4d;
+        }
+
+        .entry-fee {
+            font-weight: 700;
+            background: rgba(255, 71, 87, 0.2);
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            color: #ff9f4d;
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        .tournament-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .join-btn {
+            background: linear-gradient(135deg, #ff4757, #e8414f);
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .join-btn:disabled {
+            background: #4a4a6a;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .edit-btn, .delete-btn {
+            border: none;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .edit-btn {
+            background: #ff9800;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #e8414f;
+            color: white;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: rgba(15, 12, 31, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 20px 22px;
+            border-top: 1px solid rgba(255, 71, 87, 0.2);
+            z-index: 90;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #6c6a8a;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1.3rem;
+        }
+
+        .nav-item i {
+            font-size: 1.3rem;
+        }
+
+        .nav-active {
+            color: #ff4757;
+            transform: translateY(-3px);
+        }
+
+        .page {
+            display: none;
+        }
+
+        .active-page {
+            display: block;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e1b3a, #16132e);
+            width: 90%;
+            max-width: 380px;
+            border-radius: 32px;
+            padding: 28px 24px;
+            text-align: center;
+            border: 1px solid rgba(255, 71, 87, 0.4);
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 14px;
+            margin: 12px 0;
+            background: #0f0c22;
+            border: 1px solid rgba(255, 71, 87, 0.3);
+            border-radius: 40px;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+        }
+
+        .confirm {
+            background: linear-gradient(135deg, #ff4757, #e8414f);
+            color: white;
+        }
+
+        .cancel {
+            background: #2a2740;
+            color: white;
+        }
+
+        .qr-image {
+            width: 180px;
+            height: 180px;
+            margin: 12px auto;
+            border-radius: 20px;
+            object-fit: cover;
+            border: 2px solid #ff4757;
+        }
+
+        .upi-id-box {
+            background: #0f0c22;
+            padding: 12px;
+            border-radius: 40px;
+            margin: 12px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 71, 87, 0.3);
+        }
+
+        .copy-btn {
+            background: #ff4757;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2a2740;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            z-index: 1200;
+            display: none;
+            border-left: 4px solid #ff4757;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .request-card {
+            background: #0f0c22;
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-left: 4px solid #ff9800;
+        }
+
+        .approve-btn, .reject-btn {
+            border: none;
+            padding: 6px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .approve-btn {
+            background: #10b981;
+            color: white;
+        }
+
+        .reject-btn {
+            background: #e8414f;
+            color: white;
+        }
+    </style>
 </head>
 <body>
 
-<div class="container">
-  <h1>📹 EekLink Pro</h1>
-  <div class="sub">
-    ⬆️ Video upload karo → link bane → link click karne par sirf video (full quality)
-  </div>
-
-  <div class="dropzone" id="dropzone">
-    <div class="upload-icon">🎥📤</div>
-    <div class="upload-text">Click or drag video here</div>
-    <div class="upload-hint">MP4, WebM, MOV (Max 500MB)</div>
-  </div>
-  <input type="file" id="fileInput" accept="video/*">
-
-  <div class="preview-box" id="previewBox">
-    <div class="preview-header">
-      <span>🎬 Video Preview</span>
-      <span id="qualityBadge" style="float: right;">⚡ HD</span>
+<!-- Side Menu -->
+<div class="menu-overlay" id="menuOverlay"></div>
+<div class="side-menu" id="sideMenu">
+    <div class="menu-header">
+        <div class="menu-avatar"><i class="fas fa-crown"></i></div>
+        <div class="menu-name">Synex</div>
+        <div class="menu-email" id="menuEmail">player@synex.com</div>
     </div>
-    <video id="previewVideo" controls></video>
-    <div class="info">
-      <span>📄 <span id="fileName">-</span></span>
-      <span>💾 <span id="fileSize">-</span></span>
-      <span>📐 <span id="videoRes">-</span></span>
+    <div class="menu-items">
+        <div class="menu-item" data-page="home"><i class="fas fa-home"></i><span>Home</span></div>
+        <div class="menu-item" data-page="matches"><i class="fas fa-trophy"></i><span>My Matches</span></div>
+        <div class="menu-item" data-page="wallet"><i class="fas fa-wallet"></i><span>Wallet</span></div>
+        <div class="menu-item" data-page="profile"><i class="fas fa-user"></i><span>Profile</span></div>
+        <div class="menu-item" id="adminPanelMenuItem" style="display: none;" data-page="admin"><i class="fas fa-user-shield"></i><span>Admin Panel</span><span class="admin-badge">Admin</span></div>
+        <div class="menu-item menu-logout" id="logoutBtn"><i class="fas fa-sign-out-alt"></i><span>Logout</span></div>
     </div>
-  </div>
-
-  <div class="link-box" id="linkBox">
-    <div class="link-header">🔗 YOUR VIDEO LINK (CLICK = ONLY VIDEO)</div>
-    <div class="link-content">
-      <a id="videoLink" href="#" target="_blank">Loading...</a>
-      <button id="copyBtn">📋 Copy</button>
-      <button id="testBtn" class="btn-primary">🔗 Test</button>
-    </div>
-    <div class="success-msg">
-      ✅ Original quality preserved · No compression
-    </div>
-  </div>
-
-  <div style="text-align: right; margin-top: 15px;">
-    <button id="resetBtn" class="reset-btn">⟳ New Video</button>
-  </div>
 </div>
 
-<div id="toast" class="toast">✨ Ready!</div>
+<!-- Header -->
+<div class="header">
+    <button class="menu-btn" id="menuToggleBtn"><i class="fas fa-bars"></i></button>
+    <div class="logo">
+        <h1>SYNEX TOURNAMENT</h1>
+        <span>ff max arena</span>
+    </div>
+    <div class="profile-badge" id="profileBadge">
+        <div class="profile-avatar"><i class="fas fa-crown"></i></div>
+        <span class="profile-name">Synex</span>
+    </div>
+</div>
+
+<div class="wallet-card">
+    <div class="wallet-info">
+        <i class="fas fa-coins wallet-icon"></i>
+        <span class="wallet-balance" id="walletBalanceDisplay">0</span>
+    </div>
+    <button class="add-money" id="openPaymentModalBtn"><i class="fas fa-plus"></i> Add Funds</button>
+</div>
+
+<!-- Pages -->
+<div id="homePage" class="page active-page">
+    <div class="container">
+        <div class="hero-banner">
+            <h2>🔥 Weekly Tournaments</h2>
+            <p>Free Fire MAX • Squad Mode • Instant Payout</p>
+            <div class="prize-badge"><i class="fas fa-trophy"></i> Total Prize Pool: ₹45,000+</div>
+        </div>
+        <div class="section-title">
+            <h3><i class="fas fa-fire" style="color:#ff4757;"></i> Live Tournaments</h3>
+            <a href="#" id="refreshTournamentsLink" class="refresh-link">↻ Refresh</a>
+        </div>
+        <div id="tournamentListContainer" class="tournament-grid"></div>
+    </div>
+</div>
+
+<div id="matchesPage" class="page">
+    <div class="container">
+        <div class="section-title">
+            <h3><i class="fas fa-gamepad"></i> My Active Matches</h3>
+        </div>
+        <div id="myMatchesList" style="background:#16132e; border-radius:24px; padding:16px;"></div>
+    </div>
+</div>
+
+<div id="walletPage" class="page">
+    <div class="container">
+        <div class="section-title">
+            <h3><i class="fas fa-wallet"></i> My Wallet</h3>
+        </div>
+        <div style="background:#16132e; border-radius:24px; padding:20px;">
+            <div style="background:rgba(255,71,87,0.15); border-radius:30px; padding:25px; text-align:center;">
+                <h2 style="color:#ffd966; font-size:2.5rem;">₹<span id="walletBalanceDetail">0</span></h2>
+                <p>Available Balance</p>
+                <button class="add-money" id="walletAddBtn" style="margin-top:12px;"><i class="fas fa-rupee-sign"></i> Add Money</button>
+            </div>
+            <div style="margin-top:25px;">
+                <h4>Withdraw Funds</h4>
+                <input type="number" id="withdrawAmount" placeholder="Amount (min ₹100)" style="width:100%; padding:12px; margin:8px 0; border-radius:40px; background:#0f0c22; border:1px solid rgba(255,71,87,0.3); color:white;">
+                <input type="text" id="upiId" placeholder="UPI ID" style="width:100%; padding:12px; margin:8px 0; border-radius:40px; background:#0f0c22; border:1px solid rgba(255,71,87,0.3); color:white;">
+                <button id="requestWithdrawBtn" style="background:linear-gradient(135deg,#ff4757,#e8414f); color:white; border:none; padding:12px; border-radius:40px; width:100%; font-weight:600;">Withdraw</button>
+            </div>
+            <div style="margin-top:25px;">
+                <h4>Transactions</h4>
+                <ul id="transactionHistory" style="list-style:none; margin-top:12px;"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="profilePage" class="page">
+    <div class="container">
+        <div class="section-title">
+            <h3><i class="fas fa-user"></i> Player Profile</h3>
+        </div>
+        <div style="background:#16132e; border-radius:24px; padding:24px;">
+            <div style="display:flex; align-items:center; gap:18px; margin-bottom:24px;">
+                <div style="width:70px; height:70px; background:linear-gradient(135deg,#ff4757,#e8414f); border-radius:50%; display:flex; align-items:center; justify-content:center;"><i class="fas fa-crown" style="font-size:32px;"></i></div>
+                <div><h3>Synex</h3><p id="profileEmail" style="color:#b8b7d0;">player@synex.com</p></div>
+            </div>
+            <div><strong>UID:</strong> <span id="userUid">SYNEX_FF</span> <button id="editUidBtn" style="background:none; color:#ff9f4d; cursor:pointer;"><i class="fas fa-edit"></i></button></div>
+            <div style="margin-top:12px;"><strong>IGN:</strong> <span id="userIgn">SynexGaming</span> <button id="editIgnBtn" style="background:none; color:#ff9f4d; cursor:pointer;"><i class="fas fa-edit"></i></button></div>
+            <div style="margin-top:12px;"><strong>Tournaments Played:</strong> <span id="totalTournaments">0</span></div>
+        </div>
+    </div>
+</div>
+
+<div id="adminPage" class="page">
+    <div class="container">
+        <div class="section-title">
+            <h3><i class="fas fa-user-shield"></i> Admin Panel</h3>
+        </div>
+        <div style="background:#16132e; border-radius:24px; padding:20px; margin-bottom:16px;">
+            <h4>💰 Deposit Requests <span id="pendingCount" style="background:#ff9800; padding:2px 10px; border-radius:20px; font-size:0.7rem;">0</span></h4>
+            <div id="depositRequestsList" style="margin-top:16px;"></div>
+        </div>
+        <div style="background:#16132e; border-radius:24px; padding:20px; margin-bottom:16px;">
+            <h4>➕ Create Tournament</h4>
+            <input type="text" id="tourName" placeholder="Tournament Name" style="width:100%; padding:12px; margin:8px 0; border-radius:40px; background:#0f0c22; border:1px solid rgba(255,71,87,0.3); color:white;">
+            <input type="number" id="tourEntryFee" placeholder="Entry Fee (₹)" style="width:100%; padding:12px; margin:8px 0; border-radius:40px; background:#0f0c22; border:1px solid rgba(255,71,87,0.3); color:white;">
+            <input type="text" id="tourPrizePool" placeholder="Prize Pool (₹5000)" style="width:100%; padding:12px; margin:8px 0; border-radius:40px; background:#0f0c22; border:1px solid rgba(255,71,87,0.3); color:white;">
+            <input type="text" id="tourMap" placeholder="Map" style="width:100%; padding:12px; margin:8px 0; border-radius:40px; background:#0f0c22; border:1px solid rgba(255,71,87,0.3); color:white;">
+            <input type="number" id="tourMaxPlayers" placeholder="Max Players" style="width:100%; padding:12px; margin:8px 0; border-radius:40px; background:#0f0c22; border:1px solid rgba(255,71,87,0.3); color:white;">
+            <input type="text" id="tourThumbUrl" placeholder="Thumbnail URL (16:9 image)" style="width:100%; padding:12px; margin:8px 0; border-radius:40px; background:#0f0c22; border:1px solid rgba(255,71,87,0.3); color:white;">
+            <button id="createTournamentBtn" style="background:#10b981; color:white; border:none; padding:12px; border-radius:40px; width:100%; margin-top:10px; font-weight:600;">Create Tournament</button>
+        </div>
+        <div style="background:#16132e; border-radius:24px; padding:20px;">
+            <h4>📋 Manage Tournaments</h4>
+            <div id="adminTournamentList" style="margin-top:16px;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+    <div class="nav-item" data-page="home"><i class="fas fa-home"></i></div>
+    <div class="nav-item" data-page="matches"><i class="fas fa-trophy"></i></div>
+    <div class="nav-item" data-page="wallet"><i class="fas fa-wallet"></i></div>
+    <div class="nav-item" data-page="profile"><i class="fas fa-user"></i></div>
+</div>
+
+<!-- Payment Modal -->
+<div id="paymentModal" class="modal">
+    <div class="modal-content">
+        <i class="fas fa-qrcode" style="font-size: 2.5rem; color:#ff4757;"></i>
+        <h3 style="margin:12px 0;">Add Money via UPI</h3>
+        <img id="qrImage" class="qr-image" src="https://kommodo.ai/i/C8S9QvrQr85YeGIKSop2" alt="QR Code" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=aqdaskhan03%40fam'">
+        <div class="upi-id-box">
+            <span><i class="fas fa-credit-card"></i> <strong>aqdaskhan03@fam</strong></span>
+            <button class="copy-btn" id="copyUpiBtn"><i class="fas fa-copy"></i> Copy</button>
+        </div>
+        <input type="number" id="paymentAmount" placeholder="Amount (₹)" style="width:100%; padding:12px; margin:8px 0; border-radius:40px; background:#0f0c22; border:1px solid rgba(255,71,87,0.3); color:white;">
+        <input type="text" id="utrNumber" placeholder="UTR / Transaction ID" style="width:100%; padding:12px; margin:8px 0; border-radius:40px; background:#0f0c22; border:1px solid rgba(255,71,87,0.3); color:white;">
+        <div class="modal-buttons">
+            <button class="modal-btn cancel" id="closePaymentModal">Cancel</button>
+            <button class="modal-btn confirm" id="submitPaymentBtn">Submit Request</button>
+        </div>
+    </div>
+</div>
+
+<div id="toastMsg" class="toast"></div>
 
 <script>
-  // Get all elements
-  const dropzone = document.getElementById('dropzone');
-  const fileInput = document.getElementById('fileInput');
-  const previewBox = document.getElementById('previewBox');
-  const previewVideo = document.getElementById('previewVideo');
-  const fileNameSpan = document.getElementById('fileName');
-  const fileSizeSpan = document.getElementById('fileSize');
-  const videoResSpan = document.getElementById('videoRes');
-  const linkBox = document.getElementById('linkBox');
-  const videoLink = document.getElementById('videoLink');
-  const copyBtn = document.getElementById('copyBtn');
-  const testBtn = document.getElementById('testBtn');
-  const resetBtn = document.getElementById('resetBtn');
-  const toast = document.getElementById('toast');
-  const qualityBadge = document.getElementById('qualityBadge');
-
-  // Store data
-  let currentLinkUrl = null;
-  let currentVideoFile = null;
-
-  // Show toast message
-  function showToast(msg, isError = false) {
-    toast.textContent = msg;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2500);
-  }
-
-  // Get video resolution
-  function getVideoResolution(file) {
-    return new Promise((resolve) => {
-      const video = document.createElement('video');
-      video.preload = 'metadata';
-      const url = URL.createObjectURL(file);
-      video.onloadedmetadata = function() {
-        URL.revokeObjectURL(url);
-        resolve(video.videoWidth + ' x ' + video.videoHeight);
-      };
-      video.onerror = function() {
-        URL.revokeObjectURL(url);
-        resolve('Unknown');
-      };
-      video.src = url;
-    });
-  }
-
-  // Convert file to base64
-  function fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
-
-  // Create pure video HTML page
-  function createVideoPage(base64Data, fileType, fileName, fileSize, resolution) {
-    const safeName = fileName.substring(0, 40).replace(/[&<>]/g, '');
-    const sizeMB = (fileSize / (1024 * 1024)).toFixed(2);
+    const ADMIN_USER_ID = "ZK8smm7PQ0eovjgFESQgtNoBp4x2";
+    const UPI_ID = "aqdaskhan03@fam";
     
-    return `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pure Video · ${safeName}</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-    }
-    video {
-      max-width: 100%;
-      max-height: 100vh;
-      width: auto;
-      height: auto;
-      object-fit: contain;
-    }
-    .info {
-      position: fixed;
-      bottom: 15px;
-      right: 15px;
-      background: rgba(0,0,0,0.6);
-      padding: 5px 12px;
-      border-radius: 20px;
-      color: #888;
-      font-size: 11px;
-      font-family: monospace;
-    }
-    .quality {
-      position: fixed;
-      top: 15px;
-      right: 15px;
-      background: rgba(34,197,94,0.2);
-      padding: 5px 12px;
-      border-radius: 20px;
-      color: #4ade80;
-      font-size: 11px;
-    }
-  </style>
-</head>
-<body>
-  <video controls autoplay playsinline>
-    <source src="${base64Data}" type="${fileType}">
-  </video>
-  <div class="quality">🎬 ${resolution} · ${sizeMB} MB</div>
-  <div class="info">EekLink · Pure Video</div>
-</body>
-</html>`;
-  }
+    let depositRequests = [];
+    let currentUser = {
+        userId: "ZK8smm7PQ0eovjgFESQgtNoBp4x2",
+        email: "player@synex.com",
+        name: "Synex",
+        wallet: 0,
+        uid: "SYNEX_FF",
+        ign: "SynexGaming",
+        registeredMatches: [],
+        transactions: []
+    };
 
-  // Main function to process video
-  async function processVideo(file) {
-    if (!file || !file.type.startsWith('video/')) {
-      showToast('❌ Please select a video file', true);
-      return false;
+    let tournaments = [
+        { id: 1, name: "Weekend Rumble", entryFee: 25, prizePool: "₹2000", map: "Bermuda", maxPlayers: 32, registered: 0, thumbnail: "https://picsum.photos/id/104/400/225" },
+        { id: 2, name: "Midnight Mayhem", entryFee: 50, prizePool: "₹5000", map: "Purgatory", maxPlayers: 32, registered: 12, thumbnail: "https://picsum.photos/id/15/400/225" },
+        { id: 3, name: "Free Entry Special", entryFee: 0, prizePool: "₹800", map: "Alpine", maxPlayers: 32, registered: 18, thumbnail: "https://picsum.photos/id/26/400/225" },
+        { id: 4, name: "Pro Series Cash Cup", entryFee: 100, prizePool: "₹12000", map: "Bermuda", maxPlayers: 64, registered: 5, thumbnail: "https://picsum.photos/id/29/400/225" }
+    ];
+    let nextId = 5;
+
+    function saveData() {
+        localStorage.setItem("synex_user", JSON.stringify(currentUser));
+        localStorage.setItem("synex_tournaments", JSON.stringify(tournaments));
+        localStorage.setItem("synex_nextId", nextId);
+        localStorage.setItem("synex_deposits", JSON.stringify(depositRequests));
     }
 
-    if (file.size > 500 * 1024 * 1024) {
-      showToast('📦 Video must be less than 500MB', true);
-      return false;
+    function loadData() {
+        const u = localStorage.getItem("synex_user");
+        const t = localStorage.getItem("synex_tournaments");
+        const id = localStorage.getItem("synex_nextId");
+        const d = localStorage.getItem("synex_deposits");
+        if (u) currentUser = JSON.parse(u);
+        if (t) tournaments = JSON.parse(t);
+        if (id) nextId = parseInt(id);
+        if (d) depositRequests = JSON.parse(d);
+        if (!currentUser.registeredMatches) currentUser.registeredMatches = [];
+        if (!currentUser.transactions) currentUser.transactions = [];
+        if (currentUser.wallet === undefined) currentUser.wallet = 0;
     }
 
-    showToast('⏳ Processing video...');
-    qualityBadge.innerHTML = '<span class="spinner"></span> Processing';
-    
-    try {
-      // Get resolution
-      const resolution = await getVideoResolution(file);
-      
-      // Convert to base64
-      const base64Data = await fileToBase64(file);
-      
-      // Store file
-      currentVideoFile = file;
-      
-      // Show preview
-      if (previewVideo.src && previewVideo.src.startsWith('blob:')) {
-        URL.revokeObjectURL(previewVideo.src);
-      }
-      const previewUrl = URL.createObjectURL(file);
-      previewVideo.src = previewUrl;
-      
-      // Update file info
-      let name = file.name;
-      if (name.length > 30) name = name.substring(0, 27) + '...';
-      fileNameSpan.textContent = name;
-      
-      const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
-      fileSizeSpan.textContent = sizeMB + ' MB';
-      videoResSpan.textContent = resolution;
-      
-      // Create video page
-      const videoPageHTML = createVideoPage(base64Data, file.type, file.name, file.size, resolution);
-      
-      // Create blob URL
-      if (currentLinkUrl && currentLinkUrl.startsWith('blob:')) {
-        URL.revokeObjectURL(currentLinkUrl);
-      }
-      
-      const htmlBlob = new Blob([videoPageHTML], { type: 'text/html' });
-      currentLinkUrl = URL.createObjectURL(htmlBlob);
-      
-      // Update link display
-      let displayLink = currentLinkUrl;
-      if (displayLink.length > 55) {
-        displayLink = displayLink.substring(0, 52) + '...';
-      }
-      videoLink.href = currentLinkUrl;
-      videoLink.textContent = displayLink;
-      
-      // Show sections
-      previewBox.classList.add('show');
-      linkBox.classList.add('show');
-      
-      qualityBadge.innerHTML = '✨ HD Quality';
-      showToast('✅ Video ready! Link copied successfully');
-      
-      return true;
-    } catch (error) {
-      console.error('Error:', error);
-      showToast('❌ Error processing video', true);
-      qualityBadge.innerHTML = '⚠️ Error';
-      return false;
+    function showToast(msg) {
+        const toast = document.getElementById("toastMsg");
+        toast.innerText = msg;
+        toast.style.display = "block";
+        setTimeout(() => toast.style.display = "none", 2500);
     }
-  }
 
-  // Event handlers
-  function openFileDialog() {
-    fileInput.click();
-  }
+    function isAdmin() { return currentUser.userId === ADMIN_USER_ID; }
 
-  function onFileSelected(e) {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      processVideo(files[0]);
+    function updateWalletUI() {
+        const bal = (currentUser.wallet || 0).toFixed(2);
+        document.getElementById("walletBalanceDisplay").innerText = bal;
+        if(document.getElementById("walletBalanceDetail")) document.getElementById("walletBalanceDetail").innerText = bal;
+        const txList = document.getElementById("transactionHistory");
+        if(txList) {
+            if(currentUser.transactions.length === 0) txList.innerHTML = "<li>No transactions</li>";
+            else txList.innerHTML = currentUser.transactions.slice(0,5).map(tx => `<li style="margin-bottom:8px; padding-bottom:6px; border-bottom:1px solid #2a2740;"><strong>${tx.type}</strong><br>₹${tx.amount} - ${tx.date}<br><span style="color:#10b981;">${tx.status}</span></li>`).join('');
+        }
+        document.getElementById("totalTournaments").innerText = currentUser.registeredMatches.length;
     }
-  }
 
-  function onDragOver(e) {
-    e.preventDefault();
-    dropzone.classList.add('drag-over');
-  }
+    function renderTournaments() {
+        const container = document.getElementById("tournamentListContainer");
+        if (!container) return;
+        container.innerHTML = tournaments.map(t => {
+            const isRegistered = currentUser.registeredMatches.some(m => m.id === t.id);
+            const canJoin = !isRegistered && (t.registered < t.maxPlayers) && (currentUser.wallet >= t.entryFee);
+            return `
+                <div class="tournament-card">
+                    <div class="tournament-thumb-container">
+                        <img src="${t.thumbnail}" class="tournament-thumb" onerror="this.src='https://picsum.photos/id/104/400/225'">
+                    </div>
+                    <div class="tournament-content">
+                        <div class="tournament-info">
+                            <h4>${t.name}</h4>
+                            <div class="tournament-meta">
+                                <span><i class="fas fa-map-marker-alt"></i> ${t.map}</span>
+                                <span><i class="fas fa-users"></i> ${t.registered}/${t.maxPlayers}</span>
+                                <span><i class="fas fa-trophy"></i> ${t.prizePool}</span>
+                            </div>
+                            <div class="entry-fee">Entry: ₹${t.entryFee}</div>
+                            <div class="tournament-actions">
+                                ${isAdmin() ? `<div class="admin-actions"><button class="edit-btn" data-id="${t.id}">Edit</button><button class="delete-btn" data-id="${t.id}">Delete</button></div>` : ''}
+                                <button class="join-btn" data-id="${t.id}" ${!canJoin ? 'disabled' : ''}>${isRegistered ? '✓ Joined' : (t.entryFee === 0 ? 'Join Free' : 'Join ₹'+t.entryFee)}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        document.querySelectorAll('.join-btn[data-id]').forEach(btn => btn.addEventListener('click', () => joinTournament(parseInt(btn.dataset.id))));
+        if(isAdmin()) {
+            document.querySelectorAll('.edit-btn[data-id]').forEach(btn => btn.addEventListener('click', () => editTournament(parseInt(btn.dataset.id))));
+            document.querySelectorAll('.delete-btn[data-id]').forEach(btn => btn.addEventListener('click', () => deleteTournament(parseInt(btn.dataset.id))));
+        }
+    }
 
-  function onDragLeave(e) {
-    e.preventDefault();
-    dropzone.classList.remove('drag-over');
-  }
+    function joinTournament(tourId) {
+        const tour = tournaments.find(t => t.id === tourId);
+        if(!tour) return;
+        if(currentUser.registeredMatches.some(m => m.id === tourId)) { showToast("Already joined!"); return; }
+        if(currentUser.wallet < tour.entryFee) { showToast("Insufficient balance! Please add funds first."); document.getElementById("openPaymentModalBtn").click(); return; }
+        if(tour.registered >= tour.maxPlayers) { showToast("Tournament full!"); return; }
+        currentUser.wallet -= tour.entryFee;
+        tour.registered += 1;
+        currentUser.registeredMatches.push({ id: tour.id, name: tour.name, entryFee: tour.entryFee, status: "upcoming", screenshot: null, map: tour.map, prizePool: tour.prizePool });
+        currentUser.transactions.unshift({ type: "Tournament Join", amount: tour.entryFee, date: new Date().toLocaleString(), status: "completed" });
+        saveData();
+        updateWalletUI();
+        renderTournaments();
+        renderMyMatches();
+        if(isAdmin()) renderAdminTournamentList();
+        showToast(`Joined ${tour.name}!`);
+    }
 
-  function onDrop(e) {
-    e.preventDefault();
-    dropzone.classList.remove('drag-over');
-    const files = e.dataTransfer.files;
-    if (files && files.length > 0) {
-      const file = files[0];
-      if (file.type.startsWith('video/')) {
-        processVideo(file);
-      } else {
-        showToast('❌ Only video files allowed', true);
-      }
+    function renderMyMatches() {
+        const container = document.getElementById("myMatchesList");
+        if(!container) return;
+        if(currentUser.registeredMatches.length === 0) { container.innerHTML = "<div style='text-align:center; padding:30px;'>No active matches. Join tournaments from Home.</div>"; return; }
+        container.innerHTML = currentUser.registeredMatches.map(match => `
+            <div style="background:#0f0c22; border-radius:18px; padding:14px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+                <div><strong>${match.name}</strong><br><span style="font-size:0.7rem;">Prize: ${match.prizePool}</span><br><span style="background:rgba(255,71,87,0.2); padding:2px 10px; border-radius:20px; font-size:0.7rem;">${match.status}</span></div>
+                ${match.status !== "completed" ? `<button class="upload-btn" data-matchid="${match.id}" style="background:#10b981; border:none; padding:8px 16px; border-radius:30px; cursor:pointer;">📸 Upload</button>` : (match.screenshot ? "✓ Done" : "")}
+            </div>
+        `).join('');
+        document.querySelectorAll('.upload-btn[data-matchid]').forEach(btn => btn.addEventListener('click', () => {
+            const url = prompt("Enter screenshot URL:");
+            if(url) { const match = currentUser.registeredMatches.find(m => m.id === parseInt(btn.dataset.matchid)); if(match) { match.screenshot = url; match.status = "completed"; currentUser.wallet += 150; currentUser.transactions.unshift({ type: "Tournament Win", amount: 150, date: new Date().toLocaleString(), status: "credited" }); saveData(); updateWalletUI(); renderMyMatches(); showToast("Result submitted! +₹150 credited"); } }
+        }));
     }
-  }
 
-  async function copyLink() {
-    if (!currentLinkUrl) {
-      showToast('⚠️ Upload a video first', true);
-      return;
+    function submitPaymentRequest() {
+        const amount = parseFloat(document.getElementById("paymentAmount").value);
+        const utr = document.getElementById("utrNumber").value.trim();
+        if(!amount || amount < 10) { showToast("Enter valid amount (min ₹10)"); return; }
+        if(!utr) { showToast("Enter UTR/Transaction ID"); return; }
+        depositRequests.push({ id: Date.now(), userId: currentUser.userId, userName: currentUser.name, amount, utr, status: "pending", date: new Date().toLocaleString() });
+        saveData();
+        document.getElementById("paymentAmount").value = "";
+        document.getElementById("utrNumber").value = "";
+        document.getElementById("paymentModal").style.display = "none";
+        showToast(`Payment request of ₹${amount} submitted! Waiting for admin approval.`);
+        if(isAdmin()) renderDepositRequests();
     }
-    try {
-      await navigator.clipboard.writeText(currentLinkUrl);
-      showToast('🔗 Link copied! Share it anywhere');
-    } catch (err) {
-      const textarea = document.createElement('textarea');
-      textarea.value = currentLinkUrl;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
-      showToast('📋 Link copied!');
-    }
-  }
 
-  function testLink() {
-    if (currentLinkUrl) {
-      window.open(currentLinkUrl, '_blank');
-    } else {
-      showToast('⚠️ Upload a video first', true);
+    function renderDepositRequests() {
+        const container = document.getElementById("depositRequestsList");
+        if(!container) return;
+        const pending = depositRequests.filter(r => r.status === "pending");
+        document.getElementById("pendingCount").innerText = pending.length;
+        if(pending.length === 0) { container.innerHTML = "<div style='text-align:center; padding:20px;'>No pending requests</div>"; return; }
+        container.innerHTML = pending.map(req => `<div class="request-card"><div><strong>${req.userName}</strong></div><div>Amount: ₹${req.amount}</div><div>UTR: ${req.utr}</div><div>${req.date}</div><div style="margin-top:12px;"><button class="approve-btn" data-id="${req.id}">Approve</button> <button class="reject-btn" data-id="${req.id}">Reject</button></div></div>`).join('');
+        document.querySelectorAll('.approve-btn').forEach(btn => btn.addEventListener('click', () => handleDeposit(parseInt(btn.dataset.id), 'approve')));
+        document.querySelectorAll('.reject-btn').forEach(btn => btn.addEventListener('click', () => handleDeposit(parseInt(btn.dataset.id), 'reject')));
     }
-  }
 
-  function resetAll() {
-    if (previewVideo.src && previewVideo.src.startsWith('blob:')) {
-      URL.revokeObjectURL(previewVideo.src);
+    function handleDeposit(id, action) {
+        const req = depositRequests.find(r => r.id === id);
+        if(!req) return;
+        if(action === 'approve') {
+            req.status = "approved";
+            if(req.userId === currentUser.userId) { currentUser.wallet += req.amount; currentUser.transactions.unshift({ type: "Deposit Approved", amount: req.amount, date: new Date().toLocaleString(), status: "success" }); updateWalletUI(); }
+            showToast(`Approved ₹${req.amount} for ${req.userName}`);
+        } else { req.status = "rejected"; showToast(`Rejected ₹${req.amount} for ${req.userName}`); }
+        saveData();
+        renderDepositRequests();
+        if(req.userId === currentUser.userId) updateWalletUI();
     }
-    if (currentLinkUrl && currentLinkUrl.startsWith('blob:')) {
-      URL.revokeObjectURL(currentLinkUrl);
-    }
-    currentLinkUrl = null;
-    currentVideoFile = null;
-    previewVideo.src = '';
-    previewBox.classList.remove('show');
-    linkBox.classList.remove('show');
-    fileInput.value = '';
-    fileNameSpan.textContent = '-';
-    fileSizeSpan.textContent = '-';
-    videoResSpan.textContent = '-';
-    qualityBadge.innerHTML = '⚡ HD';
-    showToast('🔄 Reset done! Upload new video');
-  }
 
-  // Add event listeners
-  dropzone.addEventListener('click', openFileDialog);
-  fileInput.addEventListener('change', onFileSelected);
-  dropzone.addEventListener('dragover', onDragOver);
-  dropzone.addEventListener('dragleave', onDragLeave);
-  dropzone.addEventListener('drop', onDrop);
-  copyBtn.addEventListener('click', copyLink);
-  testBtn.addEventListener('click', testLink);
-  resetBtn.addEventListener('click', resetAll);
+    function renderAdminTournamentList() {
+        const container = document.getElementById("adminTournamentList");
+        if(!container || !isAdmin()) return;
+        container.innerHTML = tournaments.map(t => `<div style="background:#0f0c22; border-radius:16px; padding:12px; margin-bottom:10px; display:flex; justify-content:space-between;"><div><strong>${t.name}</strong><br><small>Entry: ₹${t.entryFee} | ${t.registered}/${t.maxPlayers}</small></div><div><button class="edit-btn" data-id="${t.id}">Edit</button> <button class="delete-btn" data-id="${t.id}">Delete</button></div></div>`).join('');
+        document.querySelectorAll('#adminTournamentList .edit-btn').forEach(btn => btn.addEventListener('click', () => editTournament(parseInt(btn.dataset.id))));
+        document.querySelectorAll('#adminTournamentList .delete-btn').forEach(btn => btn.addEventListener('click', () => deleteTournament(parseInt(btn.dataset.id))));
+    }
 
-  // Cleanup on page unload
-  window.addEventListener('beforeunload', () => {
-    if (previewVideo.src && previewVideo.src.startsWith('blob:')) {
-      URL.revokeObjectURL(previewVideo.src);
+    function createTournament() {
+        const name = document.getElementById("tourName").value;
+        const fee = parseFloat(document.getElementById("tourEntryFee").value);
+        const prize = document.getElementById("tourPrizePool").value;
+        const map = document.getElementById("tourMap").value;
+        const max = parseInt(document.getElementById("tourMaxPlayers").value);
+        const thumb = document.getElementById("tourThumbUrl").value;
+        if(!name || isNaN(fee) || !prize || !map || isNaN(max)) { showToast("Fill all fields"); return; }
+        tournaments.push({ id: nextId++, name, entryFee: fee, prizePool: prize.startsWith('₹') ? prize : '₹' + prize, map, maxPlayers: max, registered: 0, thumbnail: thumb || "https://picsum.photos/id/104/400/225" });
+        saveData();
+        renderTournaments();
+        if(isAdmin()) renderAdminTournamentList();
+        showToast("Tournament created!");
+        document.getElementById("tourName").value = ""; document.getElementById("tourEntryFee").value = ""; document.getElementById("tourPrizePool").value = ""; document.getElementById("tourMap").value = ""; document.getElementById("tourMaxPlayers").value = ""; document.getElementById("tourThumbUrl").value = "";
     }
-    if (currentLinkUrl && currentLinkUrl.startsWith('blob:')) {
-      URL.revokeObjectURL(currentLinkUrl);
-    }
-  });
+
+    function editTournament(id) { const t = tournaments.find(t => t.id === id); if(!t) return; const n = prompt("Name:", t.name); if(n) t.name = n; const f = prompt("Entry Fee:", t.entryFee); if(f) t.entryFee = parseFloat(f); const p = prompt("Prize Pool:", t.prizePool); if(p) t.prizePool = p; const m = prompt("Map:", t.map); if(m) t.map = m; saveData(); renderTournaments(); if(isAdmin()) renderAdminTournamentList(); showToast("Updated!"); }
+    function deleteTournament(id) { if(confirm("Delete?")) { tournaments = tournaments.filter(t => t.id !== id); saveData(); renderTournaments(); if(isAdmin()) renderAdminTournamentList(); showToast("Deleted!"); } }
+    function withdrawRequest(amount, upi) { if(amount < 100) { showToast("Min ₹100"); return; } if(amount > currentUser.wallet) { showToast("Insufficient balance"); return; } if(!upi) { showToast("Enter UPI ID"); return; } currentUser.wallet -= amount; currentUser.transactions.unshift({ type: `Withdrawal to ${upi}`, amount, date: new Date().toLocaleString(), status: "pending" }); saveData(); updateWalletUI(); showToast(`Withdrawal request submitted!`); }
+    function updateProfile(uid, ign) { if(uid) currentUser.uid = uid; if(ign) currentUser.ign = ign; saveData(); document.getElementById("userUid").innerText = currentUser.uid; document.getElementById("userIgn").innerText = currentUser.ign; showToast("Profile updated!"); }
+    function copyUPI() { navigator.clipboard.writeText(UPI_ID); showToast("UPI ID copied!"); }
+    function switchPage(pageId) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page')); document.getElementById(pageId + "Page").classList.add('active-page'); document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('nav-active')); const active = Array.from(document.querySelectorAll('.nav-item')).find(n => n.dataset.page === pageId); if(active) active.classList.add('nav-active'); if(pageId === 'matches') renderMyMatches(); if(pageId === 'wallet') updateWalletUI(); if(pageId === 'admin' && isAdmin()) { renderAdminTournamentList(); renderDepositRequests(); } closeMenu(); }
+    function openMenu() { document.getElementById("sideMenu").classList.add("open"); document.getElementById("menuOverlay").style.display = "block"; }
+    function closeMenu() { document.getElementById("sideMenu").classList.remove("open"); document.getElementById("menuOverlay").style.display = "none"; }
+    function logout() { if(confirm("Logout?")) { localStorage.clear(); location.reload(); } }
+
+    loadData();
+    updateWalletUI();
+    renderTournaments();
+    renderMyMatches();
+    document.getElementById("userUid").innerText = currentUser.uid;
+    document.getElementById("userIgn").innerText = currentUser.ign;
+    document.getElementById("profileEmail").innerText = currentUser.email;
+    document.getElementById("menuEmail").innerText = currentUser.email;
+    if(isAdmin()) { document.getElementById("adminPanelMenuItem").style.display = "flex"; renderDepositRequests(); }
+    else { document.getElementById("adminPanelMenuItem").style.display = "none"; }
+
+    document.getElementById("menuToggleBtn").addEventListener("click", openMenu);
+    document.getElementById("menuOverlay").addEventListener("click", closeMenu);
+    document.getElementById("profileBadge").addEventListener("click", () => switchPage('profile'));
+    document.querySelectorAll(".menu-item[data-page]").forEach(i => i.addEventListener("click", () => switchPage(i.dataset.page)));
+    document.getElementById("logoutBtn").addEventListener("click", logout);
+    document.querySelectorAll(".nav-item").forEach(i => i.addEventListener("click", () => switchPage(i.dataset.page)));
+    document.getElementById("openPaymentModalBtn").addEventListener("click", () => document.getElementById("paymentModal").style.display = "flex");
+    document.getElementById("walletAddBtn").addEventListener("click", () => document.getElementById("paymentModal").style.display = "flex");
+    document.getElementById("closePaymentModal").addEventListener("click", () => document.getElementById("paymentModal").style.display = "none");
+    document.getElementById("submitPaymentBtn").addEventListener("click", submitPaymentRequest);
+    document.getElementById("copyUpiBtn").addEventListener("click", copyUPI);
+    document.getElementById("requestWithdrawBtn").addEventListener("click", () => withdrawRequest(parseFloat(document.getElementById("withdrawAmount").value), document.getElementById("upiId").value));
+    document.getElementById("editUidBtn").addEventListener("click", () => { let uid = prompt("Enter UID:", currentUser.uid); if(uid) updateProfile(uid, null); });
+    document.getElementById("editIgnBtn").addEventListener("click", () => { let ign = prompt("Enter IGN:", currentUser.ign); if(ign) updateProfile(null, ign); });
+    document.getElementById("refreshTournamentsLink").addEventListener("click", (e) => { e.preventDefault(); renderTournaments(); showToast("Refreshed!"); });
+    document.getElementById("createTournamentBtn").addEventListener("click", createTournament);
 </script>
 </body>
 </html>
